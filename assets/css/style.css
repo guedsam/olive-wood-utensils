@@ -296,7 +296,16 @@ a:hover {
 
 .hero {
     padding: 120px 0 var(--spacing-xxl);
-    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+    background:
+        radial-gradient(ellipse at top center, rgba(139, 69, 19, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at center right, rgba(205, 133, 63, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom center, rgba(222, 184, 135, 0.4) 0%, transparent 60%),
+        linear-gradient(45deg,
+            #8B4513 0%, #A0522D 10%, #8B4513 15%, #A0522D 25%,
+            #CD853F 35%, #DEB887 45%, #CD853F 55%, #A0522D 65%,
+            #8B4513 75%, #A0522D 85%, #8B4513 90%, #8B4513 100%),
+        linear-gradient(135deg,
+            #556B2F 0%, #8FBC8F 20%, #556B2F 40%, #8FBC8F 60%, #556B2F 80%, #8FBC8F 100%);
     position: relative;
     overflow: hidden;
 }

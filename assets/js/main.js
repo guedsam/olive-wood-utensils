@@ -464,28 +464,50 @@ class ProductInteractions {
 
     setupAddToCartButtons() {
         const addToCartBtns = document.querySelectorAll('.add-to-cart');
-        
+
         addToCartBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const productId = btn.dataset.product;
                 const price = btn.dataset.price;
+
+                if (!productId || !price) {
+                    console.error('Add to cart button missing required data attributes:', btn);
+                    return;
+                }
+
                 const productCard = btn.closest('.product-card');
-                const productName = productCard ? 
-                    productCard.querySelector('.product-name').textContent :
-                    btn.closest('.product-info-detailed').querySelector('.product-title').textContent;
-                
+                let productName;
+
+                if (productCard) {
+                    productName = productCard.querySelector('.product-name')?.textContent;
+                } else {
+                    // Try product detail page
+                    const productInfoDetailed = btn.closest('.product-info-detailed');
+                    productName = productInfoDetailed?.querySelector('.product-title')?.textContent ||
+                                productInfoDetailed?.querySelector('.product-subtitle')?.textContent;
+                }
+
+                if (!productName) {
+                    // Fallback to dataset or button text
+                    productName = btn.dataset.name || btn.textContent.replace('Add to Cart - ', '').trim();
+                }
+
                 let quantity = 1;
-                
+
                 // Check if we're on product detail page
                 const quantityInput = document.getElementById('quantity');
                 if (quantityInput) {
-                    quantity = parseInt(quantityInput.value);
+                    quantity = parseInt(quantityInput.value) || 1;
                 }
-                
+
+                if (typeof price === 'string' && price.includes('$')) {
+                    price = price.replace('$', '');
+                }
+
                 cart.addItem(productId, productName, price, quantity);
-                
+
                 // Add visual feedback to button
                 this.animateAddToCartButton(btn);
             });
@@ -662,11 +684,16 @@ class CartPage {
     }
 
     updateCartDisplay() {
+        // Only run on cart page
+        if (!document.querySelector('.cart-content')) return;
+
         const cartItems = cart.getCartItems();
         const cartItemsContainer = document.getElementById('cartItems');
         const emptyCartContainer = document.getElementById('emptyCart');
         const cartSummary = document.getElementById('cartSummary');
-        
+
+        if (!cartItemsContainer || !emptyCartContainer || !cartSummary) return;
+
         if (cartItems.length === 0) {
             cartItemsContainer.style.display = 'none';
             cartSummary.style.display = 'none';
@@ -675,7 +702,7 @@ class CartPage {
             cartItemsContainer.style.display = 'block';
             cartSummary.style.display = 'block';
             emptyCartContainer.style.display = 'none';
-            
+
             this.updateCartTotals();
         }
     }

@@ -79,6 +79,26 @@
         </nav>
     </header>
 
+    <!-- Slide-out Cart Panel -->
+    <div class="cart-slideout" id="cartSlideout">
+        <div class="cart-slideout-header">
+            <h3>Your Cart</h3>
+            <button class="cart-slideout-close" id="closeSlideout">&times;</button>
+        </div>
+        <div class="cart-slideout-body" id="slideoutCartItems">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-slideout-footer" id="slideoutCartSummary">
+            <div class="cart-slideout-total">
+                <span>Total: $<span class="slideout-total">0.00</span></span>
+            </div>
+            <div class="cart-slideout-actions">
+                <a href="cart.html" class="btn btn-secondary btn-sm">View Cart</a>
+                <button class="btn btn-primary btn-sm" id="slideoutCheckoutBtn">Checkout</button>
+            </div>
+        </div>
+    </div>
+
     <main>
         <section class="hero">
             <div class="hero-content">

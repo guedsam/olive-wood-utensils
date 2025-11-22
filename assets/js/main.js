@@ -598,10 +598,14 @@ class ProductInteractions {
         if (slideoutCheckoutBtn) {
             slideoutCheckoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Navigate to cart page for checkout
-                window.location.href = 'cart.html';
+                this.initiateStripeCheckout();
             });
         }
+    }
+
+    initiateStripeCheckout() {
+        // Navigate to cart page for full checkout process
+        window.location.href = 'cart.html';
     }
 
     toggleCartSlideout() {

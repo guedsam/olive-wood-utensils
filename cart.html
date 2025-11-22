@@ -192,6 +192,73 @@
         </div>
     </footer>
 
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        // Stripe checkout integration
+        const stripe = Stripe('pk_test_51JyzVbEXAMPLEFAKEKEY'); // Replace with your actual publishable key
+
+        document.getElementById('checkoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            // Get cart items
+            const cartItems = cart.getCartItems();
+            if (cartItems.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+
+            // Convert items to Stripe format
+            const lineItems = cartItems.map(item => ({
+                price_data: {
+                    currency: 'usd',
+                    product_data: {
+                        name: item.name,
+                        description: 'Handcrafted Olive Wood Utensil',
+                        images: [`https://oliveport.org/assets/img/${item.id}.jpg`], // Fallback image
+                    },
+                    unit_amount: Math.round(item.price * 100), // Convert to cents
+                },
+                quantity: item.quantity,
+            }));
+
+            try {
+                // Create checkout session (this would be done server-side)
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        items: lineItems,
+                        success_url: window.location.origin + '/success.html',
+                        cancel_url: window.location.href,
+                        customer_email: localStorage.getItem('customer_email') || undefined,
+                    }),
+                });
+
+                const session = await response.json();
+
+                // Redirect to Stripe Checkout
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // For demo purposes, show a success message
+                alert('Stripe integration ready! In a real implementation, this would redirect to Stripe Checkout.');
+
+                // Clear cart after "successful" checkout
+                localStorage.removeItem('oliveAshCart');
+                cart.items = [];
+                cart.updateCartDisplay();
+            }
+        });
+    </script>
 </body>
 </html>

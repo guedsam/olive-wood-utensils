@@ -1171,10 +1171,10 @@ function addDynamicStyles() {
         
         .cart-slideout {
             position: fixed;
-            top: 0;
+            top: 80px;
             right: -400px;
             width: 350px;
-            height: 100vh;
+            height: calc(100vh - 80px);
             background: white;
             box-shadow: var(--shadow-lg);
             z-index: 1500;
